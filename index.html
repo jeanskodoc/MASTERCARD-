@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasterCard Togo - Plateforme de Transactions</title>
+    <title>MasterCard Togo - Accès Privé</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -49,6 +49,206 @@
             padding: 20px;
         }
         
+        /* Écran de connexion */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background-color: var(--card-color);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 35px;
+            text-align: center;
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .login-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .mastercard-logo {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .mastercard-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+        
+        .mastercard-red {
+            background-color: var(--primary-color);
+        }
+        
+        .mastercard-orange {
+            background-color: var(--secondary-color);
+        }
+        
+        .login-logo h1 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .login-logo p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        
+        .access-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .form-group {
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #fcfcfc;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(235, 0, 27, 0.1);
+            background-color: white;
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+            text-align: center;
+        }
+        
+        .btn {
+            padding: 16px 35px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(235, 0, 27, 0.2);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .login-footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #e8f4f8;
+            color: var(--info-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        
+        /* Contenu principal (caché initialement) */
+        .main-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .main-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
         /* Header et Navigation */
         header {
             background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
@@ -71,25 +271,6 @@
             display: flex;
             align-items: center;
             gap: 15px;
-        }
-        
-        .mastercard-logo {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .mastercard-circle {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-        }
-        
-        .mastercard-red {
-            background-color: var(--primary-color);
-        }
-        
-        .mastercard-orange {
-            background-color: var(--secondary-color);
         }
         
         .logo-text h1 {
@@ -122,6 +303,31 @@
         .nav-link:hover {
             color: var(--secondary-color);
             transform: translateY(-2px);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.2);
         }
         
         /* Section Hero */
@@ -233,164 +439,40 @@
             line-height: 1.6;
         }
         
-        /* Section Statistiques */
-        .stats {
+        /* Section Work */
+        .work-section {
             background: linear-gradient(135deg, var(--accent-color), #333);
             color: white;
             padding: 50px 20px;
             border-radius: var(--radius);
             margin-bottom: 60px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-        }
-        
-        .stat-item {
             text-align: center;
         }
         
-        .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        /* Section CTA */
-        .cta-section {
-            text-align: center;
-            padding: 50px 20px;
-            background: linear-gradient(135deg, rgba(235, 0, 27, 0.1), rgba(255, 95, 0, 0.1));
-            border-radius: var(--radius);
-            margin-bottom: 50px;
-        }
-        
-        .cta-content h2 {
+        .work-section h2 {
             font-size: 2.2rem;
             margin-bottom: 20px;
-            color: var(--accent-color);
+            color: white;
         }
         
-        .cta-content p {
+        .work-section p {
             font-size: 1.1rem;
             max-width: 700px;
             margin: 0 auto 30px;
-            color: var(--text-light);
-        }
-        
-        /* Bouton Work (Accès sécurisé) */
-        .work-access {
-            background-color: var(--card-color);
-            padding: 40px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            max-width: 500px;
-            margin: 0 auto 50px;
-            text-align: center;
-        }
-        
-        .work-access h3 {
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .access-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .form-group {
-            text-align: left;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-color);
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(235, 0, 27, 0.1);
-        }
-        
-        .password-container {
-            position: relative;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-light);
-            cursor: pointer;
-        }
-        
-        .error-message {
-            color: var(--danger-color);
-            font-size: 0.9rem;
-            margin-top: 5px;
-            display: none;
-        }
-        
-        .btn {
-            padding: 16px 35px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            text-decoration: none;
+            opacity: 0.9;
         }
         
         .btn-work {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--secondary-color), #ff8c00);
             color: white;
             min-width: 200px;
-            margin-top: 10px;
+            font-size: 1.2rem;
+            padding: 18px 40px;
         }
         
         .btn-work:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(235, 0, 27, 0.2);
-        }
-        
-        .btn-disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+            box-shadow: 0 15px 25px rgba(255, 95, 0, 0.3);
         }
         
         /* Footer */
@@ -442,57 +524,68 @@
             opacity: 0.8;
         }
         
-        /* Modal de confirmation */
-        .modal {
+        /* Modal de chargement */
+        .loading-modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
-            padding: 20px;
         }
         
-        .modal-content {
-            background-color: var(--card-color);
-            border-radius: var(--radius);
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
+        .loading-content {
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: modalSlideIn 0.3s ease;
+            color: white;
+            max-width: 500px;
+            padding: 40px;
         }
         
-        @keyframes modalSlideIn {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .modal-icon {
+        .loading-animation {
             font-size: 4rem;
-            color: var(--success-color);
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
             margin-bottom: 20px;
         }
         
-        .modal h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: var(--accent-color);
+        /* Animation pour les cartes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .modal p {
-            color: var(--text-light);
-            margin-bottom: 25px;
-            line-height: 1.6;
+        .feature-card {
+            animation: fadeInUp 0.6s ease forwards;
         }
         
-        .modal .btn {
-            min-width: 150px;
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
         }
         
         /* Responsive Design */
@@ -530,6 +623,10 @@
         }
         
         @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
             .hero {
                 padding: 40px 15px;
             }
@@ -542,187 +639,36 @@
                 grid-template-columns: 1fr;
             }
             
-            .work-access {
-                padding: 25px 20px;
-            }
-            
             .btn {
                 padding: 14px 25px;
                 font-size: 1rem;
             }
         }
-        
-        /* Animation pour les cartes */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .feature-card, .stat-item, .work-access {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-        
-        .feature-card:nth-child(1) { animation-delay: 0.1s; }
-        .feature-card:nth-child(2) { animation-delay: 0.2s; }
-        .feature-card:nth-child(3) { animation-delay: 0.3s; }
-        .feature-card:nth-child(4) { animation-delay: 0.4s; }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="mastercard-logo">
-                        <div class="mastercard-circle mastercard-red"></div>
-                        <div class="mastercard-circle mastercard-orange"></div>
-                    </div>
-                    <div class="logo-text">
-                        <h1>MasterCard Togo</h1>
-                        <p>Plateforme de Transactions Sécurisées</p>
-                    </div>
+    <!-- Écran de connexion (visible par défaut) -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="mastercard-logo">
+                    <div class="mastercard-circle mastercard-red"></div>
+                    <div class="mastercard-circle mastercard-orange"></div>
                 </div>
-                <div class="nav-links">
-                    <a href="#features" class="nav-link">
-                        <i class="fas fa-star"></i> Fonctionnalités
-                    </a>
-                    <a href="#stats" class="nav-link">
-                        <i class="fas fa-chart-bar"></i> Statistiques
-                    </a>
-                    <a href="#work" class="nav-link">
-                        <i class="fas fa-lock"></i> Accès Sécurisé
-                    </a>
-                    <a href="#contact" class="nav-link">
-                        <i class="fas fa-envelope"></i> Contact
-                    </a>
-                </div>
+                <h1>MasterCard Togo</h1>
+                <p>Accès sécurisé à la plateforme</p>
             </div>
-        </div>
-    </header>
-
-    <!-- Section Hero -->
-    <section class="hero">
-        <div class="container">
-            <h2>Gérez Vos Transactions Commerciales en Toute Simplicité</h2>
-            <p>Une plateforme complète pour générer, suivre et gérer vos transactions MasterCard au Togo. Interface intuitive, sécurité renforcée et envoi automatique par WhatsApp.</p>
-            <a href="#work" class="btn btn-work">
-                <i class="fas fa-rocket"></i> Accéder à la Plateforme
-            </a>
-        </div>
-    </section>
-
-    <!-- Section Fonctionnalités -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Fonctionnalités Principales</h2>
-                <p>Découvrez les outils puissants qui simplifient vos transactions commerciales</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <h3>Générateur d'Achat</h3>
-                    <p>Créez des commandes complètes avec acheteur, commerçant, articles et paiements en quelques clics.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fab fa-whatsapp"></i>
-                    </div>
-                    <h3>Envoi Automatique WhatsApp</h3>
-                    <p>Envoyez automatiquement les reçus aux commerçants via WhatsApp avec formatage professionnel.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <h3>Sauvegarde Intelligente</h3>
-                    <p>Toutes vos transactions sont sauvegardées localement avec système de filtres et recherche avancée.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Sécurité Renforcée</h3>
-                    <p>Accès sécurisé par identifiant et mot de passe. Données protégées et transactions cryptées.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Statistiques -->
-    <section class="stats" id="stats">
-        <div class="container">
-            <div class="section-title" style="color: white;">
-                <h2>Notre Impact</h2>
-                <p>Des chiffres qui parlent d'eux-mêmes</p>
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Transactions Traitées</div>
-                </div>
-                
-                <div class="stat-item">
-                    <div class="stat-number">150+</div>
-                    <div class="stat-label">Commerçants Actifs</div>
-                </div>
-                
-                <div class="stat-item">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">Satisfaction Clients</div>
-                </div>
-                
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Disponibilité</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section CTA -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Prêt à Optimiser Vos Transactions ?</h2>
-                <p>Rejoignez des dizaines de commerçants qui ont déjà simplifié leur gestion commerciale avec notre plateforme MasterCard Togo.</p>
-                <a href="generateur.html" class="btn btn-work">
-                    <i class="fas fa-play-circle"></i> Commencer Maintenant
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Accès Work -->
-    <section class="work-access" id="work">
-        <div class="container">
-            <h3><i class="fas fa-lock"></i> Accès à la Plateforme</h3>
-            <p>Veuillez saisir vos identifiants pour accéder au générateur de transactions</p>
             
             <form class="access-form" id="accessForm">
                 <div class="form-group">
                     <label for="username">Identifiant</label>
-                    <input type="text" id="username" placeholder="Votre identifiant" required>
+                    <input type="text" id="username" placeholder="Entrez votre identifiant" required autocomplete="username">
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
                     <div class="password-container">
-                        <input type="password" id="password" placeholder="Votre mot de passe" required>
+                        <input type="password" id="password" placeholder="Entrez votre mot de passe" required autocomplete="current-password">
                         <button type="button" class="password-toggle" id="passwordToggle">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -732,100 +678,221 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-work" id="submitBtn">
-                    <i class="fas fa-sign-in-alt"></i> Se Connecter
+                <button type="submit" class="btn btn-login" id="submitBtn">
+                    <span id="btnText">Se Connecter</span>
+                    <div class="loading-spinner" id="loadingSpinner" style="display: none;"></div>
                 </button>
-                
-                <div class="form-hint" style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: var(--text-light);">
-                    <i class="fas fa-info-circle"></i> Identifiants par défaut : KOLA / admin123
-                </div>
             </form>
+            
+            <div class="login-footer">
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Accès sécurisé et privé
+                </div>
+                <p style="margin-top: 15px; font-size: 0.85rem;">
+                    <i class="fas fa-info-circle"></i> Pour accéder à la plateforme, utilisez vos identifiants fournis
+                </p>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <div class="mastercard-logo">
-                        <div class="mastercard-circle mastercard-red"></div>
-                        <div class="mastercard-circle mastercard-orange"></div>
+    <!-- Contenu principal (caché jusqu'à l'authentification) -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="mastercard-logo">
+                            <div class="mastercard-circle mastercard-red"></div>
+                            <div class="mastercard-circle mastercard-orange"></div>
+                        </div>
+                        <div class="logo-text">
+                            <h1>MasterCard Togo</h1>
+                            <p>Plateforme de Transactions Professionnelles</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 style="color: white; margin-bottom: 5px;">MasterCard Togo</h3>
-                        <p style="opacity: 0.8; font-size: 0.9rem;">Plateforme de Transactions Commerciales</p>
+                    
+                    <div class="nav-links">
+                        <a href="#features" class="nav-link">
+                            <i class="fas fa-star"></i> Fonctionnalités
+                        </a>
+                        <a href="#work" class="nav-link">
+                            <i class="fas fa-cogs"></i> Plateforme
+                        </a>
+                        <div class="user-info">
+                            <span id="userGreeting">Bienvenue, <strong id="userName"></strong></span>
+                            <button class="logout-btn" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Section Hero -->
+        <section class="hero">
+            <div class="container">
+                <h2>Bienvenue sur la Plateforme MasterCard Togo</h2>
+                <p>Utilisez notre générateur de transactions avancé pour gérer vos achats, envoyer des reçus automatiquement par WhatsApp et suivre toutes vos opérations commerciales.</p>
+                <a href="#work" class="btn btn-work">
+                    <i class="fas fa-play-circle"></i> Accéder au Générateur
+                </a>
+            </div>
+        </section>
+
+        <!-- Section Fonctionnalités -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Fonctionnalités Exclusives</h2>
+                    <p>Découvrez les outils puissants réservés aux utilisateurs authentifiés</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3>Générateur Intelligent</h3>
+                        <p>Créez des commandes complètes avec toutes les informations nécessaires : acheteur, commerçant, articles, paiements et instructions spéciales.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3>WhatsApp Automatique</h3>
+                        <p>Envoyez automatiquement des reçus détaillés aux commerçants via WhatsApp avec un formatage professionnel et toutes les informations nécessaires.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>Sauvegarde Locale</h3>
+                        <p>Toutes vos transactions sont sauvegardées localement avec un système de filtres avancé, recherche et organisation par date, statut ou montant.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Suivi Complet</h3>
+                        <p>Suivez toutes vos transactions, générez des rapports et analysez vos données commerciales avec des statistiques détaillées et des graphiques.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Work -->
+        <section class="work-section" id="work">
+            <div class="container">
+                <h2>Accès au Générateur de Transactions</h2>
+                <p>Cliquez sur le bouton ci-dessous pour accéder à l'outil complet de génération de transactions MasterCard Togo</p>
+                <a href="générateur.html" class="btn btn-work" id="generatorLink">
+                    <i class="fas fa-external-link-alt"></i> Ouvrir le Générateur
+                </a>
+                <p style="margin-top: 20px; font-size: 0.95rem; opacity: 0.8;">
+                    <i class="fas fa-shield-alt"></i> Redirection sécurisée vers la plateforme de génération
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="contact">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <div class="mastercard-logo">
+                            <div class="mastercard-circle mastercard-red"></div>
+                            <div class="mastercard-circle mastercard-orange"></div>
+                        </div>
+                        <div>
+                            <h3 style="color: white; margin-bottom: 5px;">MasterCard Togo</h3>
+                            <p style="opacity: 0.8; font-size: 0.9rem;">Plateforme Professionnelle Authentifiée</p>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <a href="#features" class="footer-link">Fonctionnalités</a>
+                        <a href="#work" class="footer-link">Plateforme</a>
+                        <span class="footer-link" style="cursor: pointer;" id="logoutFooterBtn">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
+                        </span>
                     </div>
                 </div>
                 
-                <div class="footer-links">
-                    <a href="#features" class="footer-link">Fonctionnalités</a>
-                    <a href="#stats" class="footer-link">Statistiques</a>
-                    <a href="#work" class="footer-link">Accès</a>
-                    <a href="#contact" class="footer-link">Contact</a>
+                <div class="copyright">
+                    <p>&copy; 2024 MasterCard Togo. Accès réservé aux utilisateurs autorisés.</p>
+                    <p style="margin-top: 5px;">Session active pour : <span id="footerUserName"></span></p>
                 </div>
             </div>
-            
-            <div class="copyright">
-                <p>&copy; 2024 MasterCard Togo. Tous droits réservés.</p>
-                <p style="margin-top: 5px;">Solution développée pour les commerçants togolais</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
-    <!-- Modal de Confirmation -->
-    <div class="modal" id="successModal">
-        <div class="modal-content">
-            <div class="modal-icon">
-                <i class="fas fa-check-circle"></i>
+    <!-- Modal de chargement -->
+    <div class="loading-modal" id="loadingModal">
+        <div class="loading-content">
+            <div class="loading-animation">
+                <i class="fas fa-circle-notch fa-spin"></i>
             </div>
-            <h3>Accès Autorisé !</h3>
-            <p>Vous allez être redirigé vers le générateur de transactions MasterCard Togo.</p>
-            <p style="font-size: 0.9rem; color: var(--success-color); margin-top: 10px;">
-                <i class="fas fa-shield-alt"></i> Connexion sécurisée établie
-            </p>
-            <button class="btn btn-work" id="redirectBtn">
-                <i class="fas fa-external-link-alt"></i> Accéder à la Plateforme
-            </button>
+            <div class="loading-text">Connexion à la plateforme...</div>
+            <p style="opacity: 0.8; font-size: 0.9rem;">Vérification des identifiants et chargement des fonctionnalités</p>
         </div>
     </div>
 
     <script>
+        // Configuration d'accès
+        const ACCESS_CONFIG = {
+            credentials: {
+                'KOLA': 'admin123',
+                'admin': 'mastercard2024',
+                'gestion': 'togo@secure'
+            },
+            destinationFile: 'générateur.html',
+            sessionTimeout: 30 // minutes
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Identifiants d'accès
-            const ACCESS_CREDENTIALS = {
-                username: 'KOLA',
-                password: 'admin123'
-            };
-            
-            // Fichier de destination
-            const DESTINATION_FILE = 'générateur.html';
-            
             // Éléments DOM
+            const loginScreen = document.getElementById('loginScreen');
+            const mainContent = document.getElementById('mainContent');
             const accessForm = document.getElementById('accessForm');
             const usernameInput = document.getElementById('username');
             const passwordInput = document.getElementById('password');
             const passwordToggle = document.getElementById('passwordToggle');
             const errorMessage = document.getElementById('errorMessage');
             const submitBtn = document.getElementById('submitBtn');
-            const successModal = document.getElementById('successModal');
-            const redirectBtn = document.getElementById('redirectBtn');
-            
+            const btnText = document.getElementById('btnText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const loadingModal = document.getElementById('loadingModal');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const logoutFooterBtn = document.getElementById('logoutFooterBtn');
+            const userName = document.getElementById('userName');
+            const footerUserName = document.getElementById('footerUserName');
+            const userGreeting = document.getElementById('userGreeting');
+            const generatorLink = document.getElementById('generatorLink');
+
             // Variables d'état
             let loginAttempts = 0;
-            const MAX_ATTEMPTS = 3;
-            
+            const MAX_ATTEMPTS = 5;
+            let sessionTimer = null;
+
+            // Vérifier si une session est déjà active
+            checkExistingSession();
+
             // Basculer la visibilité du mot de passe
             passwordToggle.addEventListener('click', function() {
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
                 
-                // Changer l'icône
                 const icon = this.querySelector('i');
                 icon.classList.toggle('fa-eye');
                 icon.classList.toggle('fa-eye-slash');
             });
-            
+
             // Validation du formulaire
             accessForm.addEventListener('submit', function(event) {
                 event.preventDefault();
@@ -838,138 +905,372 @@
                 usernameInput.style.borderColor = '';
                 passwordInput.style.borderColor = '';
                 
-                // Validation basique
+                // Validation
                 if (!username || !password) {
                     showError('Veuillez remplir tous les champs');
+                    highlightInvalidFields(username, password);
                     return;
                 }
                 
                 // Désactiver le bouton pendant la vérification
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Vérification...';
+                setButtonLoading(true);
                 
-                // Simuler une vérification (délai pour l'effet)
+                // Simuler un délai de vérification
                 setTimeout(() => {
-                    // Vérifier les identifiants
-                    if (username === ACCESS_CREDENTIALS.username && password === ACCESS_CREDENTIALS.password) {
+                    if (authenticateUser(username, password)) {
                         // Connexion réussie
                         loginAttempts = 0;
-                        showSuccess();
+                        startUserSession(username);
+                        showMainContent(username);
                     } else {
                         // Échec de connexion
-                        loginAttempts++;
-                        
-                        if (loginAttempts >= MAX_ATTEMPTS) {
-                            showError('Trop de tentatives échouées. Veuillez réessayer plus tard.');
-                            submitBtn.disabled = true;
-                            submitBtn.classList.add('btn-disabled');
-                            submitBtn.innerHTML = '<i class="fas fa-lock"></i> Accès bloqué';
-                            
-                            // Bloquer temporairement
-                            setTimeout(() => {
-                                loginAttempts = 0;
-                                submitBtn.disabled = false;
-                                submitBtn.classList.remove('btn-disabled');
-                                submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se Connecter';
-                                errorMessage.style.display = 'none';
-                            }, 30000); // 30 secondes de blocage
-                        } else {
-                            showError(`Identifiants incorrects. Tentative ${loginAttempts}/${MAX_ATTEMPTS}`);
-                            usernameInput.style.borderColor = 'var(--danger-color)';
-                            passwordInput.style.borderColor = 'var(--danger-color)';
-                            
-                            // Secouer le formulaire pour l'effet
-                            accessForm.style.animation = 'shake 0.5s';
-                            setTimeout(() => {
-                                accessForm.style.animation = '';
-                            }, 500);
-                            
-                            // Réactiver le bouton
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se Connecter';
-                        }
+                        handleFailedLogin(username);
                     }
                 }, 1500);
             });
-            
-            // Redirection vers le générateur
-            redirectBtn.addEventListener('click', function() {
-                window.location.href = DESTINATION_FILE;
-            });
-            
-            // Fonction pour afficher les erreurs
+
+            // Déconnexion
+            logoutBtn.addEventListener('click', logoutUser);
+            logoutFooterBtn.addEventListener('click', logoutUser);
+
+            // Fonction d'authentification
+            function authenticateUser(username, password) {
+                return ACCESS_CONFIG.credentials[username] === password;
+            }
+
+            // Gérer l'échec de connexion
+            function handleFailedLogin(username) {
+                loginAttempts++;
+                
+                if (loginAttempts >= MAX_ATTEMPTS) {
+                    showError(`Trop de tentatives échouées. Accès bloqué pour 5 minutes.`);
+                    lockAccess();
+                } else {
+                    showError(`Identifiants incorrects. Tentative ${loginAttempts}/${MAX_ATTEMPTS}`);
+                    highlightInvalidFields(username, passwordInput.value);
+                    
+                    // Animation de secousse
+                    accessForm.classList.add('shake');
+                    setTimeout(() => {
+                        accessForm.classList.remove('shake');
+                    }, 500);
+                }
+                
+                setButtonLoading(false);
+            }
+
+            // Blocage d'accès temporaire
+            function lockAccess() {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-lock"></i> Accès bloqué';
+                
+                setTimeout(() => {
+                    loginAttempts = 0;
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se Connecter';
+                    errorMessage.style.display = 'none';
+                    usernameInput.style.borderColor = '';
+                    passwordInput.style.borderColor = '';
+                }, 300000); // 5 minutes
+            }
+
+            // Démarrer une session utilisateur
+            function startUserSession(username) {
+                const sessionData = {
+                    username: username,
+                    loginTime: new Date().toISOString(),
+                    timeout: ACCESS_CONFIG.sessionTimeout
+                };
+                
+                localStorage.setItem('mastercard_session', JSON.stringify(sessionData));
+                
+                // Démarrer le timer de session
+                startSessionTimer();
+            }
+
+            // Vérifier une session existante
+            function checkExistingSession() {
+                const sessionData = localStorage.getItem('mastercard_session');
+                
+                if (sessionData) {
+                    try {
+                        const session = JSON.parse(sessionData);
+                        const loginTime = new Date(session.loginTime);
+                        const now = new Date();
+                        const minutesElapsed = (now - loginTime) / (1000 * 60);
+                        
+                        if (minutesElapsed < session.timeout) {
+                            // Session toujours valide
+                            showMainContent(session.username);
+                            startSessionTimer();
+                        } else {
+                            // Session expirée
+                            localStorage.removeItem('mastercard_session');
+                        }
+                    } catch (error) {
+                        localStorage.removeItem('mastercard_session');
+                    }
+                }
+            }
+
+            // Démarrer le timer de session
+            function startSessionTimer() {
+                if (sessionTimer) clearInterval(sessionTimer);
+                
+                sessionTimer = setInterval(() => {
+                    const sessionData = localStorage.getItem('mastercard_session');
+                    
+                    if (!sessionData) {
+                        clearInterval(sessionTimer);
+                        return;
+                    }
+                    
+                    try {
+                        const session = JSON.parse(sessionData);
+                        const loginTime = new Date(session.loginTime);
+                        const now = new Date();
+                        const minutesElapsed = (now - loginTime) / (1000 * 60);
+                        
+                        if (minutesElapsed >= session.timeout) {
+                            // Session expirée
+                            logoutUser();
+                        } else {
+                            // Avertir 5 minutes avant expiration
+                            const minutesRemaining = Math.floor(session.timeout - minutesElapsed);
+                            if (minutesRemaining === 5) {
+                                showSessionWarning();
+                            }
+                        }
+                    } catch (error) {
+                        clearInterval(sessionTimer);
+                    }
+                }, 60000); // Vérifier chaque minute
+            }
+
+            // Avertissement de session
+            function showSessionWarning() {
+                // Créer une notification
+                const warning = document.createElement('div');
+                warning.style.position = 'fixed';
+                warning.style.bottom = '20px';
+                warning.style.right = '20px';
+                warning.style.backgroundColor = 'var(--warning-color)';
+                warning.style.color = '#333';
+                warning.style.padding = '15px 20px';
+                warning.style.borderRadius = '8px';
+                warning.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                warning.style.zIndex = '1000';
+                warning.style.maxWidth = '300px';
+                warning.style.animation = 'fadeInUp 0.3s ease';
+                
+                warning.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                        <i class="fas fa-clock" style="font-size: 1.2rem;"></i>
+                        <strong>Session expire bientôt</strong>
+                    </div>
+                    <div style="font-size: 0.9rem;">
+                        Votre session expirera dans 5 minutes. 
+                        <a href="#" id="extendSession" style="color: #333; text-decoration: underline; font-weight: bold;">Prolonger</a>
+                    </div>
+                `;
+                
+                document.body.appendChild(warning);
+                
+                // Bouton pour prolonger la session
+                warning.querySelector('#extendSession').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    extendSession();
+                    warning.remove();
+                });
+                
+                // Supprimer après 10 secondes
+                setTimeout(() => {
+                    if (warning.parentNode) {
+                        warning.remove();
+                    }
+                }, 10000);
+            }
+
+            // Prolonger la session
+            function extendSession() {
+                const sessionData = localStorage.getItem('mastercard_session');
+                
+                if (sessionData) {
+                    try {
+                        const session = JSON.parse(sessionData);
+                        session.loginTime = new Date().toISOString();
+                        localStorage.setItem('mastercard_session', JSON.stringify(session));
+                        
+                        // Afficher une confirmation
+                        showNotification('Session prolongée de 30 minutes', 'success');
+                    } catch (error) {
+                        console.error('Erreur lors de la prolongation de session:', error);
+                    }
+                }
+            }
+
+            // Afficher le contenu principal
+            function showMainContent(username) {
+                // Afficher le modal de chargement
+                loadingModal.style.display = 'flex';
+                
+                setTimeout(() => {
+                    // Masquer le modal de chargement
+                    loadingModal.style.display = 'none';
+                    
+                    // Mettre à jour les informations utilisateur
+                    userName.textContent = username;
+                    footerUserName.textContent = username;
+                    
+                    // Mettre à jour le lien du générateur
+                    generatorLink.href = ACCESS_CONFIG.destinationFile;
+                    
+                    // Masquer l'écran de connexion
+                    loginScreen.style.display = 'none';
+                    
+                    // Afficher le contenu principal
+                    mainContent.classList.add('active');
+                    
+                    // Faire défiler vers le haut
+                    window.scrollTo(0, 0);
+                    
+                    // Afficher une notification de bienvenue
+                    showNotification(`Bienvenue ${username} !`, 'success');
+                }, 2000);
+            }
+
+            // Déconnexion de l'utilisateur
+            function logoutUser() {
+                // Arrêter le timer de session
+                if (sessionTimer) {
+                    clearInterval(sessionTimer);
+                    sessionTimer = null;
+                }
+                
+                // Supprimer la session
+                localStorage.removeItem('mastercard_session');
+                
+                // Masquer le contenu principal
+                mainContent.classList.remove('active');
+                
+                // Réinitialiser le formulaire
+                accessForm.reset();
+                errorMessage.style.display = 'none';
+                usernameInput.style.borderColor = '';
+                passwordInput.style.borderColor = '';
+                
+                // Afficher l'écran de connexion
+                loginScreen.style.display = 'flex';
+                
+                // Réactiver le bouton de connexion
+                setButtonLoading(false);
+                
+                // Faire défiler vers le haut
+                window.scrollTo(0, 0);
+                
+                // Afficher une notification
+                showNotification('Vous avez été déconnecté avec succès', 'info');
+            }
+
+            // Fonctions utilitaires
             function showError(message) {
                 errorMessage.textContent = message;
                 errorMessage.style.display = 'block';
-                
-                // Animation d'erreur
-                errorMessage.style.animation = 'fadeInUp 0.3s ease';
             }
-            
-            // Fonction pour afficher le succès
-            function showSuccess() {
-                // Afficher la modal
-                successModal.style.display = 'flex';
-                
-                // Animation d'entrée
-                setTimeout(() => {
-                    successModal.querySelector('.modal-content').style.transform = 'scale(1)';
-                }, 10);
-                
-                // Redirection automatique après 5 secondes
-                setTimeout(() => {
-                    window.location.href = DESTINATION_FILE;
-                }, 5000);
-                
-                // Mettre à jour le bouton avec compte à rebours
-                let countdown = 5;
-                const countdownInterval = setInterval(() => {
-                    redirectBtn.innerHTML = `<i class="fas fa-external-link-alt"></i> Redirection dans ${countdown}s`;
-                    countdown--;
-                    
-                    if (countdown < 0) {
-                        clearInterval(countdownInterval);
-                        redirectBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Redirection...';
-                    }
-                }, 1000);
+
+            function highlightInvalidFields(username, password) {
+                if (!username) {
+                    usernameInput.style.borderColor = 'var(--danger-color)';
+                }
+                if (!password) {
+                    passwordInput.style.borderColor = 'var(--danger-color)';
+                }
             }
-            
-            // Animation au défilement
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
+
+            function setButtonLoading(isLoading) {
+                if (isLoading) {
+                    btnText.style.display = 'none';
+                    loadingSpinner.style.display = 'inline-block';
+                    submitBtn.disabled = true;
+                } else {
+                    btnText.style.display = 'inline';
+                    loadingSpinner.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            }
+
+            function showNotification(message, type = 'info') {
+                // Créer la notification
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = getNotificationColor(type);
+                notification.style.color = type === 'warning' ? '#333' : 'white';
+                notification.style.padding = '15px 20px';
+                notification.style.borderRadius = '8px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                notification.style.zIndex = '2000';
+                notification.style.maxWidth = '350px';
+                notification.style.animation = 'fadeInUp 0.3s ease';
+                
+                // Icône selon le type
+                let icon = 'info-circle';
+                if (type === 'success') icon = 'check-circle';
+                if (type === 'warning') icon = 'exclamation-triangle';
+                if (type === 'error') icon = 'exclamation-circle';
+                
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                        <i class="fas fa-${icon}" style="font-size: 1.2rem;"></i>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; margin-bottom: 5px;">${getNotificationTitle(type)}</div>
+                            <div style="font-size: 0.95rem;">${message}</div>
+                        </div>
+                        <button class="close-notification" style="background: none; border: none; color: inherit; cursor: pointer; font-size: 1.2rem;">&times;</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Bouton de fermeture
+                notification.querySelector('.close-notification').addEventListener('click', function() {
+                    notification.remove();
                 });
-            }, observerOptions);
-            
-            // Observer les éléments à animer
-            document.querySelectorAll('.feature-card, .stat-item, .work-access').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(el);
-            });
-            
-            // Ajouter l'animation de secousse
+                
+                // Supprimer automatiquement après 5 secondes
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 5000);
+            }
+
+            function getNotificationColor(type) {
+                switch(type) {
+                    case 'success': return 'var(--success-color)';
+                    case 'warning': return 'var(--warning-color)';
+                    case 'error': return 'var(--danger-color)';
+                    default: return 'var(--info-color)';
+                }
+            }
+
+            function getNotificationTitle(type) {
+                switch(type) {
+                    case 'success': return 'Succès';
+                    case 'warning': return 'Attention';
+                    case 'error': return 'Erreur';
+                    default: return 'Information';
+                }
+            }
+
+            // Ajouter l'animation fadeInUp
             const style = document.createElement('style');
             style.textContent = `
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                    20%, 40%, 60%, 80% { transform: translateX(5px); }
-                }
-                
                 @keyframes fadeInUp {
                     from {
                         opacity: 0;
-                        transform: translateY(10px);
+                        transform: translateY(20px);
                     }
                     to {
                         opacity: 1;
@@ -978,15 +1279,10 @@
                 }
             `;
             document.head.appendChild(style);
-            
-            // Pré-remplir pour les tests (à retirer en production)
-            usernameInput.value = ACCESS_CREDENTIALS.username;
-            passwordInput.value = ACCESS_CREDENTIALS.password;
-            
-            // Message de bienvenue dans la console
-            console.log('%c🔐 MasterCard Togo - Accès Sécurisé', 'color: #eb001b; font-size: 16px; font-weight: bold;');
-            console.log('%cPlateforme de transactions commerciales sécurisées', 'color: #666;');
-            console.log('%cIdentifiants par défaut : KOLA / admin123', 'color: #28a745;');
+
+            // Pré-remplir pour les tests (optionnel)
+            // usernameInput.value = 'KOLA';
+            // passwordInput.value = 'admin123';
         });
     </script>
 </body>
