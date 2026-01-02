@@ -1737,14 +1737,14 @@
                 <div class="card" id="fees-section">
                     <h3>Frais appliqués 
                         <span class="maintenance-indicator" id="maintenance-indicator">
-                            <i class="fas fa-cog"></i> Frais mensuel: 100 FCFA
+                            <i class="fas fa-cog"></i> Frais mensuel: 500 FCFA
                         </span>
                     </h3>
                     <div class="fee-notification" id="maintenance-fee-notification" style="display: none;">
-                        <i class="fas fa-info-circle"></i> <strong>Frais d'entretien mensuel</strong> de 100 FCFA appliqués ce mois-ci.
+                        <i class="fas fa-info-circle"></i> <strong>Frais d'entretien mensuel</strong> de 500 FCFA appliqués ce mois-ci.
                     </div>
                     <div class="auto-fee-notice">
-                        <i class="fas fa-exclamation-triangle"></i> <strong>Note importante:</strong> Les frais de recharge de 5% sont automatiquement déduits avant crédit du solde.
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Note importante:</strong> Les frais de recharge de 10% sont automatiquement déduits avant crédit du solde.
                     </div>
                     <div class="fee-history" id="fee-history">
                         <h4>Historique des frais récents</h4>
@@ -1793,13 +1793,13 @@
                         <div>Solde actuel (après vérification frais)</div>
                         <div class="solde-montant" id="solde-recharge">Vérification...</div>
                         <div class="fee-check">
-                            <i class="fas fa-info-circle"></i> Frais d'entretien mensuel: 100 FCFA (si solde > 200 FCFA)
+                            <i class="fas fa-info-circle"></i> Frais d'entretien mensuel: 500 FCFA (si solde > 500 FCFA)
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="recharge-montant">Montant à recharger (FCFA)</label>
-                        <input type="number" id="recharge-montant" class="form-control" placeholder="Ex: 10000" min="1000" required>
+                        <input type="number" id="recharge-montant" class="form-control" placeholder="Ex: 10000" min="10000" required>
                     </div>
                     
                     <div class="fees-info" id="recharge-fees-section" style="display: none;">
@@ -1809,7 +1809,7 @@
                             <span class="fees-value" id="recharge-amount-display">0 FCFA</span>
                         </div>
                         <div class="fees-row">
-                            <span class="fees-label">Frais de recharge (5%):</span>
+                            <span class="fees-label">Frais de recharge (10%):</span>
                             <span class="fees-value" id="recharge-fees-display">0 FCFA</span>
                         </div>
                         <div class="fees-total">
@@ -1817,12 +1817,12 @@
                             <span class="fees-value" id="recharge-net-display">0 FCFA</span>
                         </div>
                         <div class="fees-warning">
-                            <i class="fas fa-exclamation-triangle"></i> <strong>ATTENTION:</strong> Les frais de 5% sont automatiquement déduits. Seul le montant net sera crédité sur votre compte.
+                            <i class="fas fa-exclamation-triangle"></i> <strong>ATTENTION:</strong> Les frais de 10% sont automatiquement déduits. Seul le montant net sera crédité sur votre compte.
                         </div>
                     </div>
                     
                     <div class="auto-fee-notice">
-                        <i class="fas fa-robot"></i> <strong>Application automatique:</strong> Les frais de recharge de 5% sont automatiquement déduits. Vous verrez uniquement le montant net sur votre solde.
+                        <i class="fas fa-robot"></i> <strong>Application automatique:</strong> Les frais de recharge de 10% sont automatiquement déduits. Vous verrez uniquement le montant net sur votre solde.
                     </div>
                     
                     <div class="form-group">
@@ -1885,7 +1885,7 @@
                         <div>Solde actuel (après vérification frais)</div>
                         <div class="solde-montant" id="solde-achat">Vérification...</div>
                         <div class="fee-check">
-                            <i class="fas fa-exclamation-triangle"></i> Frais d'entretien mensuel appliqués si solde > 200 FCFA
+                            <i class="fas fa-exclamation-triangle"></i> Frais d'entretien mensuel appliqués si solde > 500 FCFA
                         </div>
                     </div>
                     
@@ -2013,13 +2013,13 @@
                         <div>Solde actuel (après vérification frais)</div>
                         <div class="solde-montant" id="solde-retrait">Vérification...</div>
                         <div class="fee-check">
-                            <i class="fas fa-calculator"></i> Frais d'entretien: 100 FCFA/mois (si solde > 200 FCFA)
+                            <i class="fas fa-calculator"></i> Frais d'entretien: 500 FCFA/mois (si solde > 500 FCFA)
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="retrait-montant">Montant à retirer (FCFA)</label>
-                        <input type="number" id="retrait-montant" class="form-control" placeholder="Ex: 30000" min="10000" required>
+                        <input type="number" id="retrait-montant" class="form-control" placeholder="Ex: 50000" min="50000" required>
                     </div>
                     
                     <div class="fees-info" id="retrait-fees-section" style="display: none;">
@@ -2029,7 +2029,7 @@
                             <span class="fees-value" id="retrait-amount-display">0 FCFA</span>
                         </div>
                         <div class="fees-row">
-                            <span class="fees-label">Frais de retrait (9%):</span>
+                            <span class="fees-label">Frais de retrait (25%):</span>
                             <span class="fees-value" id="retrait-fees-display">0 FCFA</span>
                         </div>
                         <div class="fees-total">
@@ -2204,10 +2204,10 @@
         let currentTabIndex = 0;
         const tabOrder = ['recharge', 'achat', 'recevoir', 'retrait'];
         
-        const MAINTENANCE_FEE = 100;
-        const MINIMUM_BALANCE_FOR_FEE = 200;
-        const RECHARGE_FEE_PERCENTAGE = 0.05;
-        const WITHDRAWAL_FEE_PERCENTAGE = 0.09;
+        const MAINTENANCE_FEE = 500;
+        const MINIMUM_BALANCE_FOR_FEE = 500;
+        const RECHARGE_FEE_PERCENTAGE = 0.08;
+        const WITHDRAWAL_FEE_PERCENTAGE = 0.25;
         
         const loginContainer = document.getElementById('login-container');
         const appContainer = document.getElementById('app-container');
