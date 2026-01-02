@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'Achat MasterCard avec Sauvegarde</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #eb001b;
+            --secondary-color: #ff5f00;
+            --accent-color: #000000;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-color: #e0e0e0;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --radius: 10px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--card-color);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%23ffffff" opacity="0.1"><path d="M50,10 L90,90 L10,90 Z"/></svg>');
+            background-size: 50px 50px;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .mastercard-circles {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .mastercard-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+        }
+        
+        .mastercard-red {
+            background-color: var(--primary-color);
+        }
+        
+        .mastercard-orange {
+            background-color: var(--secondary-color);
+        }
+        
+        .whatsapp-badge {
+            background-color: #25D366;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .save-badge {
+            background-color: var(--info-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+        
+        .tabs-navigation {
+            display: flex;
+            background-color: #f5f5f5;
+            border-radius: var(--radius) var(--radius) 0 0;
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .tab:hover {
+            background-color: rgba(235, 0, 27, 0.05);
+        }
+        
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background-color: rgba(235, 0, 27, 0.1);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--secondary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        
+        .required {
+            color: var(--danger-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(235, 0, 27, 0.1);
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+        
+        .input-with-icon input {
+            padding-right: 45px;
+        }
+        
+        .currency-input {
+            position: relative;
+        }
+        
+        .currency-input input {
+            padding-left: 50px;
+        }
+        
+        .currency-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .form-hint {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .items-container {
+            background-color: #f8f9fa;
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .item-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .item-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .item-name {
+            flex: 2;
+        }
+        
+        .item-quantity {
+            flex: 1;
+        }
+        
+        .item-price {
+            flex: 1;
+        }
+        
+        .item-total {
+            flex: 1;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .add-item-btn {
+            background-color: var(--info-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+        
+        .add-item-btn:hover {
+            background-color: #138496;
+            transform: translateY(-2px);
+        }
+        
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+        
+        .remove-item-btn:hover {
+            color: #bd2130;
+        }
+        
+        .summary-section {
+            background-color: #f8f9fa;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .summary-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .summary-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .summary-label {
+            color: var(--text-light);
+        }
+        
+        .summary-value {
+            font-weight: 600;
+        }
+        
+        .summary-total {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid var(--border-color);
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 150px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: #25D366;
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: #333;
+        }
+        
+        .btn-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .info-box {
+            background-color: #e8f4f8;
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--info-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .warning-box {
+            background-color: #fff3cd;
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--warning-color);
+            color: #856404;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .success-box {
+            background-color: #d4edda;
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--success-color);
+            color: #155724;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        /* STYLES POUR L'ONGLET SAUVEGARDES */
+        .saves-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .saves-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filters-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+        }
+        
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--text-color);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .saves-list {
+            background-color: #f8f9fa;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .save-item {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--success-color);
+            transition: var(--transition);
+        }
+        
+        .save-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .save-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .save-code {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .save-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .save-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .action-btn-view {
+            background-color: var(--info-color);
+            color: white;
+        }
+        
+        .action-btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+        
+        .action-btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .save-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .save-detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .no-saves-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+        
+        .no-saves-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .page-btn:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .export-btn {
+            background-color: var(--success-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .export-btn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            color: white;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease;
+            max-width: 350px;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification-success {
+            background-color: var(--success-color);
+            border-left: 4px solid #1e7e34;
+        }
+        
+        .notification-warning {
+            background-color: var(--warning-color);
+            color: #333;
+            border-left: 4px solid #d39e00;
+        }
+        
+        .notification-error {
+            background-color: var(--danger-color);
+            border-left: 4px solid #bd2130;
+        }
+        
+        .notification-info {
+            background-color: var(--info-color);
+            border-left: 4px solid #117a8b;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-row .form-group {
+                margin-bottom: 18px;
+            }
+            
+            .item-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .item-name,
+            .item-quantity,
+            .item-price,
+            .item-total {
+                width: 100%;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .saves-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filters-container {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                width: 100%;
+            }
+            
+            .save-item-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .save-actions {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 10px;
+            }
+            
+            .tabs-navigation {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="mastercard-circles">
+                    <div class="mastercard-circle mastercard-red"></div>
+                    <div class="mastercard-circle mastercard-orange"></div>
+                </div>
+                <h1>Générateur d'Achat MasterCard</h1>
+            </div>
+            <p>Formulaire complet avec sauvegarde automatique et filtres</p>
+            <div class="whatsapp-badge">
+                <i class="fab fa-whatsapp"></i> Envoi automatique WhatsApp
+            </div>
+            <div class="save-badge">
+                <i class="fas fa-save"></i> Sauvegarde automatique locale
+            </div>
+        </div>
+        
+        <div class="tabs-navigation">
+            <div class="tab active" data-tab="form">
+                <i class="fas fa-shopping-cart"></i> Nouvel Achat
+            </div>
+            <div class="tab" data-tab="saves">
+                <i class="fas fa-database"></i> Commandes Sauvegardées
+                <span class="save-count-badge" id="save-count-badge" style="background: white; color: var(--primary-color); padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; margin-left: 5px;">0</span>
+            </div>
+        </div>
+        
+        <!-- Onglet Formulaire -->
+        <div class="tab-content active" id="form-tab">
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Instructions :</strong> Remplissez toutes les sections pour générer une commande. 
+                    La commande sera automatiquement sauvegardée et envoyée par WhatsApp au commerçant.
+                </div>
+            </div>
+            
+            <form id="purchase-form">
+                <!-- Section Acheteur -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-user"></i> Informations de l'Acheteur</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acheteur-nom">Nom complet <span class="required">*</span></label>
+                            <input type="text" id="acheteur-nom" placeholder="Votre nom complet" required value="KOLA Maniwah">
+                        </div>
+                        <div class="form-group">
+                            <label for="acheteur-telephone">Téléphone WhatsApp <span class="required">*</span></label>
+                            <div class="input-with-icon">
+                                <input type="tel" id="acheteur-telephone" placeholder="Votre numéro WhatsApp" required value="+228 93 38 75 95">
+                                <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+                            </div>
+                            <div class="form-hint">Le commerçant pourra vous contacter sur ce numéro</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="acheteur-email">Email</label>
+                            <div class="input-with-icon">
+                                <input type="email" id="acheteur-email" placeholder="Votre adresse email" value="kola.maniwah@example.tg">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="acheteur-adresse">Adresse de livraison</label>
+                            <textarea id="acheteur-adresse" rows="2" placeholder="Adresse complète pour la livraison">Lomé, Agoè, Togo</textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Commerçant -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-store"></i> Informations du Commerçant</h3>
+                    
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Important :</strong> Le reçu de commande sera envoyé automatiquement au numéro WhatsApp du commerçant.
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="commercant-nom">Nom du commerce <span class="required">*</span></label>
+                            <input type="text" id="commercant-nom" placeholder="Nom du magasin ou boutique" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="commercant-whatsapp">WhatsApp du commerçant <span class="required">*</span></label>
+                            <div class="input-with-icon">
+                                <input type="tel" id="commercant-whatsapp" placeholder="Ex: +228 92 87 16 05" required value="+228 92 87 16 05">
+                                <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+                            </div>
+                            <div class="form-hint">Le reçu sera envoyé à ce numéro</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="commercant-adresse">Adresse du commerce</label>
+                            <input type="text" id="commercant-adresse" placeholder="Adresse du magasin">
+                        </div>
+                        <div class="form-group">
+                            <label for="commercant-type">Type de commerce</label>
+                            <select id="commercant-type">
+                                <option value="">Sélectionner</option>
+                                <option value="supermarche">Supermarché</option>
+                                <option value="restaurant">Restaurant</option>
+                                <option value="boutique">Boutique</option>
+                                <option value="electronique">Électronique</option>
+                                <option value="habillement">Habillement</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Articles -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-shopping-cart"></i> Articles Commandés</h3>
+                    
+                    <div class="items-container" id="items-container">
+                        <div class="item-row" data-item="1">
+                            <div class="item-name">
+                                <label>Article <span class="required">*</span></label>
+                                <input type="text" class="item-input" placeholder="Nom de l'article" data-field="name" required>
+                            </div>
+                            <div class="item-quantity">
+                                <label>Quantité <span class="required">*</span></label>
+                                <input type="number" class="item-input" placeholder="1" min="1" value="1" data-field="quantity" required>
+                            </div>
+                            <div class="item-price">
+                                <label>Prix unitaire (FCFA) <span class="required">*</span></label>
+                                <div class="currency-input">
+                                    <span class="currency-symbol">FCFA</span>
+                                    <input type="number" class="item-input" placeholder="0" min="0" data-field="price" required>
+                                </div>
+                            </div>
+                            <div class="item-total">
+                                <div>
+                                    <label>Total</label>
+                                    <div class="item-total-display">0 FCFA</div>
+                                </div>
+                                <button type="button" class="remove-item-btn" data-remove="1" style="display: none;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="add-item-btn" id="add-item-btn">
+                        <i class="fas fa-plus"></i> Ajouter un article
+                    </button>
+                </div>
+                
+                <!-- Section Paiement -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-credit-card"></i> Mode de Paiement</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paiement-methode">Méthode de paiement <span class="required">*</span></label>
+                            <select id="paiement-methode" required>
+                                <option value="">Sélectionner</option>
+                                <option value="mastercard" selected>MasterCard</option>
+                                <option value="mobile_money">Mobile Money</option>
+                                <option value="especes">Espèces à la livraison</option>
+                                <option value="virement">Virement bancaire</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="livraison-type">Mode de livraison</label>
+                            <select id="livraison-type">
+                                <option value="">Sélectionner</option>
+                                <option value="sur_place">Retrait sur place</option>
+                                <option value="livraison" selected>Livraison à domicile</option>
+                                <option value="point_relais">Point relais</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="instructions">Instructions spéciales</label>
+                        <textarea id="instructions" rows="3" placeholder="Instructions pour la livraison, allergies alimentaires, etc."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Récapitulatif -->
+                <div class="summary-section">
+                    <h3 class="summary-title"><i class="fas fa-file-alt"></i> Récapitulatif de la Commande</h3>
+                    
+                    <div class="summary-row">
+                        <div class="summary-label">Nombre d'articles:</div>
+                        <div class="summary-value" id="recap-items-count">1</div>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <div class="summary-label">Sous-total:</div>
+                        <div class="summary-value" id="recap-subtotal">0 FCFA</div>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <div class="summary-label">Frais de livraison:</div>
+                        <div class="summary-value" id="recap-livraison">0 FCFA</div>
+                    </div>
+                    
+                    <div class="summary-total">
+                        <div class="summary-label">TOTAL À PAYER:</div>
+                        <div class="summary-value" id="recap-total">0 FCFA</div>
+                    </div>
+                </div>
+                
+                <!-- Boutons d'action -->
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" id="reset-btn">
+                        <i class="fas fa-redo"></i> Réinitialiser
+                    </button>
+                    <button type="submit" class="btn btn-success" id="submit-btn">
+                        <i class="fab fa-whatsapp"></i> Générer & Envoyer
+                    </button>
+                    <button type="button" class="btn btn-info" id="save-draft-btn">
+                        <i class="fas fa-save"></i> Sauvegarder le brouillon
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Onglet Sauvegardes -->
+        <div class="tab-content" id="saves-tab">
+            <div class="saves-header">
+                <div class="saves-title">
+                    <i class="fas fa-database"></i> Commandes Sauvegardées
+                </div>
+                
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label class="filter-label">Filtrer par statut:</label>
+                        <select id="filter-status" class="filter-select">
+                            <option value="all">Tous les statuts</option>
+                            <option value="envoyé">Envoyé</option>
+                            <option value="brouillon">Brouillon</option>
+                            <option value="traité">Traité</option>
+                            <option value="annulé">Annulé</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Filtrer par date:</label>
+                        <select id="filter-date" class="filter-select">
+                            <option value="all">Toutes les dates</option>
+                            <option value="today">Aujourd'hui</option>
+                            <option value="week">Cette semaine</option>
+                            <option value="month">Ce mois</option>
+                            <option value="last-month">Le mois dernier</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Trier par:</label>
+                        <select id="sort-by" class="filter-select">
+                            <option value="date-desc">Date (plus récent)</option>
+                            <option value="date-asc">Date (plus ancien)</option>
+                            <option value="total-desc">Total (plus élevé)</option>
+                            <option value="total-asc">Total (plus bas)</option>
+                            <option value="name-asc">Nom (A-Z)</option>
+                            <option value="name-desc">Nom (Z-A)</option>
+                        </select>
+                    </div>
+                    
+                    <button class="export-btn" id="export-btn">
+                        <i class="fas fa-download"></i> Exporter
+                    </button>
+                </div>
+            </div>
+            
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-value" id="total-orders">0</div>
+                    <div class="stat-label">Commandes totales</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-value" id="total-amount">0 FCFA</div>
+                    <div class="stat-label">Montant total</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="stat-value" id="unique-merchants">0</div>
+                    <div class="stat-label">Commerçants uniques</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-value" id="today-orders">0</div>
+                    <div class="stat-label">Commandes aujourd'hui</div>
+                </div>
+            </div>
+            
+            <div class="saves-list" id="saves-list">
+                <!-- Les commandes sauvegardées seront affichées ici dynamiquement -->
+                <div class="no-saves-message" id="no-saves-message">
+                    <i class="fas fa-inbox"></i>
+                    <h3>Aucune commande sauvegardée</h3>
+                    <p>Créez votre première commande dans l'onglet "Nouvel Achat"</p>
+                </div>
+            </div>
+            
+            <div class="pagination" id="pagination" style="display: none;">
+                <button class="page-btn" id="prev-page" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div id="page-numbers"></div>
+                <button class="page-btn" id="next-page" disabled>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Générateur d'Achat MasterCard Togo &copy; 2025</p>
+            <p style="margin-top: 5px; font-size: 0.8rem;">
+                <i class="fas fa-shield-alt"></i> Données sauvegardées localement | 
+                <i class="fab fa-whatsapp" style="color: #25D366;"></i> Envoi automatique WhatsApp
+            </p>
+        </footer>
+    </div>
+    
+    <script>
+        // Gestionnaire d'état de l'application
+        const AppState = {
+            saves: [],
+            currentPage: 1,
+            itemsPerPage: 5,
+            filters: {
+                status: 'all',
+                date: 'all',
+                sortBy: 'date-desc'
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialisation des variables
+            let itemCount = 1;
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const formattedTime = today.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Éléments DOM
+            const form = document.getElementById('purchase-form');
+            const itemsContainer = document.getElementById('items-container');
+            const addItemBtn = document.getElementById('add-item-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const saveDraftBtn = document.getElementById('save-draft-btn');
+            const exportBtn = document.getElementById('export-btn');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const saveCountBadge = document.getElementById('save-count-badge');
+            
+            // Filtres
+            const filterStatus = document.getElementById('filter-status');
+            const filterDate = document.getElementById('filter-date');
+            const sortBy = document.getElementById('sort-by');
+            
+            // Pagination
+            const prevPageBtn = document.getElementById('prev-page');
+            const nextPageBtn = document.getElementById('next-page');
+            const pageNumbers = document.getElementById('page-numbers');
+            
+            // Initialiser l'application
+            loadSavesFromStorage();
+            updateSaveCount();
+            updateStats();
+            renderSavesList();
+            
+            // Initialiser le premier article
+            updateItemTotal(1);
+            updateSummary();
+            
+            // Événements
+            addItemBtn.addEventListener('click', addNewItem);
+            resetBtn.addEventListener('click', resetForm);
+            saveDraftBtn.addEventListener('click', saveAsDraft);
+            exportBtn.addEventListener('click', exportSaves);
+            
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                if (validateForm()) {
+                    generateOrder('envoyé');
+                }
+            });
+            
+            // Navigation par onglets
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Écouteurs pour les changements dans les articles
+            document.addEventListener('input', function(event) {
+                if (event.target.classList.contains('item-input')) {
+                    const itemRow = event.target.closest('.item-row');
+                    if (itemRow) {
+                        const itemId = itemRow.getAttribute('data-item');
+                        updateItemTotal(itemId);
+                        updateSummary();
+                    }
+                }
+            });
+            
+            // Écouteurs pour les changements dans les autres champs
+            document.getElementById('livraison-type').addEventListener('change', updateSummary);
+            
+            // Écouteurs pour les filtres
+            filterStatus.addEventListener('change', function() {
+                AppState.filters.status = this.value;
+                AppState.currentPage = 1;
+                renderSavesList();
+            });
+            
+            filterDate.addEventListener('change', function() {
+                AppState.filters.date = this.value;
+                AppState.currentPage = 1;
+                renderSavesList();
+            });
+            
+            sortBy.addEventListener('change', function() {
+                AppState.filters.sortBy = this.value;
+                AppState.currentPage = 1;
+                renderSavesList();
+            });
+            
+            // Pagination
+            prevPageBtn.addEventListener('click', function() {
+                if (AppState.currentPage > 1) {
+                    AppState.currentPage--;
+                    renderSavesList();
+                }
+            });
+            
+            nextPageBtn.addEventListener('click', function() {
+                const totalPages = Math.ceil(getFilteredSaves().length / AppState.itemsPerPage);
+                if (AppState.currentPage < totalPages) {
+                    AppState.currentPage++;
+                    renderSavesList();
+                }
+            });
+            
+            // Fonctions
+            function addNewItem() {
+                itemCount++;
+                const newItem = document.createElement('div');
+                newItem.className = 'item-row';
+                newItem.setAttribute('data-item', itemCount);
+                
+                newItem.innerHTML = `
+                    <div class="item-name">
+                        <label>Article <span class="required">*</span></label>
+                        <input type="text" class="item-input" placeholder="Nom de l'article" data-field="name" required>
+                    </div>
+                    <div class="item-quantity">
+                        <label>Quantité <span class="required">*</span></label>
+                        <input type="number" class="item-input" placeholder="1" min="1" value="1" data-field="quantity" required>
+                    </div>
+                    <div class="item-price">
+                        <label>Prix unitaire (FCFA) <span class="required">*</span></label>
+                        <div class="currency-input">
+                            <span class="currency-symbol">FCFA</span>
+                            <input type="number" class="item-input" placeholder="0" min="0" data-field="price" required>
+                        </div>
+                    </div>
+                    <div class="item-total">
+                        <div>
+                            <label>Total</label>
+                            <div class="item-total-display">0 FCFA</div>
+                        </div>
+                        <button type="button" class="remove-item-btn" data-remove="${itemCount}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                
+                itemsContainer.appendChild(newItem);
+                
+                // Ajouter l'événement pour le bouton de suppression
+                newItem.querySelector('.remove-item-btn').addEventListener('click', function() {
+                    removeItem(itemCount);
+                });
+                
+                updateSummary();
+            }
+            
+            function removeItem(itemId) {
+                const itemToRemove = document.querySelector(`.item-row[data-item="${itemId}"]`);
+                if (itemToRemove) {
+                    itemToRemove.remove();
+                    updateSummary();
+                }
+            }
+            
+            function updateItemTotal(itemId) {
+                const itemRow = document.querySelector(`.item-row[data-item="${itemId}"]`);
+                if (!itemRow) return;
+                
+                const quantity = parseInt(itemRow.querySelector('[data-field="quantity"]').value) || 0;
+                const price = parseInt(itemRow.querySelector('[data-field="price"]').value) || 0;
+                const total = quantity * price;
+                
+                const totalDisplay = itemRow.querySelector('.item-total-display');
+                totalDisplay.textContent = total.toLocaleString('fr-FR') + ' FCFA';
+            }
+            
+            function updateSummary() {
+                // Calculer le sous-total
+                let subtotal = 0;
+                const items = document.querySelectorAll('.item-row');
+                
+                items.forEach(item => {
+                    const quantity = parseInt(item.querySelector('[data-field="quantity"]').value) || 0;
+                    const price = parseInt(item.querySelector('[data-field="price"]').value) || 0;
+                    subtotal += quantity * price;
+                });
+                
+                // Calculer les frais de livraison
+                let livraison = 0;
+                const livraisonType = document.getElementById('livraison-type').value;
+                
+                if (livraisonType === 'livraison') {
+                    livraison = subtotal > 0 ? Math.max(1000, Math.round(subtotal * 0.05)) : 0;
+                } else if (livraisonType === 'point_relais') {
+                    livraison = 500;
+                }
+                
+                const total = subtotal + livraison;
+                
+                // Mettre à jour l'affichage
+                document.getElementById('recap-items-count').textContent = items.length;
+                document.getElementById('recap-subtotal').textContent = subtotal.toLocaleString('fr-FR') + ' FCFA';
+                document.getElementById('recap-livraison').textContent = livraison.toLocaleString('fr-FR') + ' FCFA';
+                document.getElementById('recap-total').textContent = total.toLocaleString('fr-FR') + ' FCFA';
+            }
+            
+            function validateForm() {
+                const requiredFields = form.querySelectorAll('[required]');
+                let isValid = true;
+                
+                // Valider les champs requis
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.style.borderColor = 'var(--danger-color)';
+                        isValid = false;
+                    } else {
+                        field.style.borderColor = '';
+                    }
+                });
+                
+                // Valider qu'il y a au moins un article avec un prix
+                const items = document.querySelectorAll('.item-row');
+                let hasValidItem = false;
+                
+                items.forEach(item => {
+                    const name = item.querySelector('[data-field="name"]').value.trim();
+                    const price = parseInt(item.querySelector('[data-field="price"]').value) || 0;
+                    
+                    if (name && price > 0) {
+                        hasValidItem = true;
+                    }
+                });
+                
+                if (!hasValidItem) {
+                    showNotification('Veuillez ajouter au moins un article avec un prix valide.', 'warning');
+                    return false;
+                }
+                
+                // Valider le numéro WhatsApp du commerçant
+                const commercantWhatsApp = document.getElementById('commercant-whatsapp').value;
+                if (!isValidPhoneNumber(commercantWhatsApp)) {
+                    showNotification('Veuillez entrer un numéro WhatsApp valide pour le commerçant.', 'warning');
+                    return false;
+                }
+                
+                return isValid;
+            }
+            
+            function isValidPhoneNumber(phone) {
+                // Validation simple pour les numéros internationaux
+                const phoneRegex = /^\+[1-9]\d{1,14}$/;
+                return phoneRegex.test(phone.replace(/\s/g, ''));
+            }
+            
+            function generateOrder(status = 'envoyé') {
+                // Récupérer les données du formulaire
+                const acheteur = {
+                    nom: document.getElementById('acheteur-nom').value,
+                    telephone: document.getElementById('acheteur-telephone').value,
+                    email: document.getElementById('acheteur-email').value,
+                    adresse: document.getElementById('acheteur-adresse').value
+                };
+                
+                const commercant = {
+                    nom: document.getElementById('commercant-nom').value,
+                    whatsapp: document.getElementById('commercant-whatsapp').value,
+                    adresse: document.getElementById('commercant-adresse').value,
+                    type: document.getElementById('commercant-type').value
+                };
+                
+                // Récupérer les articles
+                const articles = [];
+                const items = document.querySelectorAll('.item-row');
+                
+                items.forEach(item => {
+                    const name = item.querySelector('[data-field="name"]').value.trim();
+                    const quantity = parseInt(item.querySelector('[data-field="quantity"]').value) || 0;
+                    const price = parseInt(item.querySelector('[data-field="price"]').value) || 0;
+                    
+                    if (name && price > 0) {
+                        articles.push({
+                            name: name,
+                            quantity: quantity,
+                            price: price,
+                            total: quantity * price
+                        });
+                    }
+                });
+                
+                const paiement = document.getElementById('paiement-methode').value;
+                const livraison = document.getElementById('livraison-type').value;
+                const instructions = document.getElementById('instructions').value;
+                
+                // Calculer les totaux
+                const subtotal = articles.reduce((sum, item) => sum + item.total, 0);
+                let fraisLivraison = 0;
+                
+                if (livraison === 'livraison') {
+                    fraisLivraison = subtotal > 0 ? Math.max(1000, Math.round(subtotal * 0.05)) : 0;
+                } else if (livraison === 'point_relais') {
+                    fraisLivraison = 500;
+                }
+                
+                const total = subtotal + fraisLivraison;
+                
+                // Générer le numéro de commande
+                const commandeCode = generateOrderCode();
+                const now = new Date();
+                
+                // Créer l'objet de sauvegarde
+                const saveData = {
+                    id: Date.now(),
+                    code: commandeCode,
+                    acheteur: acheteur,
+                    commercant: commercant,
+                    articles: articles,
+                    details: {
+                        paiement: paiement,
+                        livraison: livraison,
+                        instructions: instructions,
+                        subtotal: subtotal,
+                        livraison: fraisLivraison,
+                        total: total
+                    },
+                    status: status,
+                    date: now.toISOString(),
+                    formattedDate: now.toLocaleDateString('fr-FR'),
+                    formattedTime: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+                };
+                
+                // Ajouter à la liste des sauvegardes
+                AppState.saves.unshift(saveData);
+                
+                // Sauvegarder dans le localStorage
+                saveSavesToStorage();
+                
+                // Mettre à jour l'interface
+                updateSaveCount();
+                updateStats();
+                
+                // Afficher une notification
+                if (status === 'envoyé') {
+                    showNotification('Commande générée et sauvegardée avec succès!', 'success');
+                    
+                    // Envoyer le reçu par WhatsApp
+                    sendWhatsAppReceipt(acheteur, commercant, articles, commandeCode, total, paiement, livraison, instructions, fraisLivraison);
+                    
+                    // Réinitialiser le formulaire
+                    resetForm();
+                } else {
+                    showNotification('Brouillon sauvegardé avec succès!', 'info');
+                }
+                
+                // Basculer vers l'onglet des sauvegardes
+                switchTab('saves');
+                
+                // Re-rendre la liste des sauvegardes
+                renderSavesList();
+            }
+            
+            function saveAsDraft() {
+                if (validateForm()) {
+                    generateOrder('brouillon');
+                }
+            }
+            
+            function generateOrderCode() {
+                const timestamp = Date.now().toString().slice(-6);
+                const random = Math.random().toString(36).substr(2, 4).toUpperCase();
+                return `CMD-${timestamp}-${random}`;
+            }
+            
+            function getPaymentMethodLabel(method) {
+                const methods = {
+                    'mastercard': 'MasterCard',
+                    'mobile_money': 'Mobile Money',
+                    'especes': 'Espèces à la livraison',
+                    'virement': 'Virement bancaire'
+                };
+                return methods[method] || method;
+            }
+            
+            function sendWhatsAppReceipt(acheteur, commercant, articles, commandeCode, total, paiement, livraison, instructions, fraisLivraison) {
+                // Formater la liste des articles
+                let articlesList = '';
+                articles.forEach((item, index) => {
+                    articlesList += `${index + 1}. ${item.name} (${item.quantity} × ${item.price.toLocaleString('fr-FR')} FCFA) = ${item.total.toLocaleString('fr-FR')} FCFA\n`;
+                });
+                
+                // Calculer le sous-total
+                const subtotal = articles.reduce((sum, item) => sum + item.total, 0);
+                
+                // Créer le message WhatsApp
+                const message = `📋 *NOUVELLE COMMANDE RECUE* 📋\n\n` +
+                               `*Code Commande:* ${commandeCode}\n` +
+                               `*Date:* ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}\n\n` +
+                               `👤 *INFORMATIONS ACHETEUR*\n` +
+                               `Nom: ${acheteur.nom}\n` +
+                               `Téléphone: ${acheteur.telephone}\n` +
+                               `Email: ${acheteur.email || 'Non précisé'}\n` +
+                               `Adresse: ${acheteur.adresse || 'Non précisée'}\n\n` +
+                               `🏪 *INFORMATIONS COMMANDE*\n` +
+                               `${articlesList}\n` +
+                               `Sous-total: ${subtotal.toLocaleString('fr-FR')} FCFA\n` +
+                               `Frais livraison: ${fraisLivraison.toLocaleString('fr-FR')} FCFA\n` +
+                               `*TOTAL: ${total.toLocaleString('fr-FR')} FCFA*\n\n` +
+                               `💳 *PAIEMENT*\n` +
+                               `Méthode: ${getPaymentMethodLabel(paiement)}\n` +
+                               `Livraison: ${livraison === 'livraison' ? 'Livraison à domicile' : livraison === 'point_relais' ? 'Point relais' : 'Retrait sur place'}\n\n` +
+                               `📝 *INSTRUCTIONS*\n` +
+                               `${instructions || 'Aucune instruction particulière'}\n\n` +
+                               `✅ *ACTION REQUISE*\n` +
+                               `1. Confirmer la disponibilité des articles\n` +
+                               `2. Contacter l'acheteur pour confirmation\n` +
+                               `3. Préparer la commande\n` +
+                               `4. Confirmer la livraison\n\n` +
+                               `🔄 *STATUT*\n` +
+                               `En attente de traitement`;
+                
+                // Encoder le message pour URL
+                const encodedMessage = encodeURIComponent(message);
+                
+                // Numéro WhatsApp du commerçant (sans espaces)
+                const phoneNumber = commercant.whatsapp.replace(/\s/g, '');
+                
+                // Créer le lien WhatsApp
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+                
+                // Ouvrir WhatsApp dans un nouvel onglet
+                window.open(whatsappUrl, '_blank');
+            }
+            
+            // SYSTÈME DE SAUVEGARDE
+            function loadSavesFromStorage() {
+                try {
+                    const savedData = localStorage.getItem('mastercardPurchaseSaves');
+                    if (savedData) {
+                        AppState.saves = JSON.parse(savedData);
+                    }
+                } catch (error) {
+                    console.error('Erreur lors du chargement des sauvegardes:', error);
+                    AppState.saves = [];
+                }
+            }
+            
+            function saveSavesToStorage() {
+                try {
+                    localStorage.setItem('mastercardPurchaseSaves', JSON.stringify(AppState.saves));
+                } catch (error) {
+                    console.error('Erreur lors de la sauvegarde:', error);
+                    showNotification('Erreur lors de la sauvegarde des données', 'error');
+                }
+            }
+            
+            function updateSaveCount() {
+                const count = AppState.saves.length;
+                saveCountBadge.textContent = count;
+            }
+            
+            function updateStats() {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                // Commandes totales
+                document.getElementById('total-orders').textContent = AppState.saves.length;
+                
+                // Montant total
+                const totalAmount = AppState.saves.reduce((sum, save) => sum + save.details.total, 0);
+                document.getElementById('total-amount').textContent = totalAmount.toLocaleString('fr-FR') + ' FCFA';
+                
+                // Commerçants uniques
+                const uniqueMerchants = new Set(AppState.saves.map(save => save.commercant.nom));
+                document.getElementById('unique-merchants').textContent = uniqueMerchants.size;
+                
+                // Commandes aujourd'hui
+                const todayOrders = AppState.saves.filter(save => {
+                    const saveDate = new Date(save.date);
+                    saveDate.setHours(0, 0, 0, 0);
+                    return saveDate.getTime() === today.getTime();
+                }).length;
+                document.getElementById('today-orders').textContent = todayOrders;
+            }
+            
+            function getFilteredSaves() {
+                let filtered = [...AppState.saves];
+                
+                // Filtrer par statut
+                if (AppState.filters.status !== 'all') {
+                    filtered = filtered.filter(save => save.status === AppState.filters.status);
+                }
+                
+                // Filtrer par date
+                const now = new Date();
+                if (AppState.filters.date !== 'all') {
+                    filtered = filtered.filter(save => {
+                        const saveDate = new Date(save.date);
+                        
+                        switch (AppState.filters.date) {
+                            case 'today':
+                                return saveDate.toDateString() === now.toDateString();
+                            case 'week':
+                                const weekAgo = new Date(now);
+                                weekAgo.setDate(weekAgo.getDate() - 7);
+                                return saveDate >= weekAgo;
+                            case 'month':
+                                const monthAgo = new Date(now);
+                                monthAgo.setMonth(monthAgo.getMonth() - 1);
+                                return saveDate >= monthAgo;
+                            case 'last-month':
+                                const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                                const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                                return saveDate >= firstDayLastMonth && saveDate <= lastDayLastMonth;
+                            default:
+                                return true;
+                        }
+                    });
+                }
+                
+                // Trier
+                switch (AppState.filters.sortBy) {
+                    case 'date-asc':
+                        filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        break;
+                    case 'date-desc':
+                        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        break;
+                    case 'total-desc':
+                        filtered.sort((a, b) => b.details.total - a.details.total);
+                        break;
+                    case 'total-asc':
+                        filtered.sort((a, b) => a.details.total - b.details.total);
+                        break;
+                    case 'name-asc':
+                        filtered.sort((a, b) => a.acheteur.nom.localeCompare(b.acheteur.nom));
+                        break;
+                    case 'name-desc':
+                        filtered.sort((a, b) => b.acheteur.nom.localeCompare(a.acheteur.nom));
+                        break;
+                }
+                
+                return filtered;
+            }
+            
+            function renderSavesList() {
+                const savesList = document.getElementById('saves-list');
+                const noSavesMessage = document.getElementById('no-saves-message');
+                const pagination = document.getElementById('pagination');
+                
+                const filteredSaves = getFilteredSaves();
+                const totalPages = Math.ceil(filteredSaves.length / AppState.itemsPerPage);
+                
+                // Afficher/masquer le message "aucune sauvegarde"
+                if (filteredSaves.length === 0) {
+                    noSavesMessage.style.display = 'block';
+                    pagination.style.display = 'none';
+                    savesList.innerHTML = '';
+                    savesList.appendChild(noSavesMessage);
+                    return;
+                } else {
+                    noSavesMessage.style.display = 'none';
+                }
+                
+                // Calculer les éléments à afficher pour la page actuelle
+                const startIndex = (AppState.currentPage - 1) * AppState.itemsPerPage;
+                const endIndex = startIndex + AppState.itemsPerPage;
+                const savesToDisplay = filteredSaves.slice(startIndex, endIndex);
+                
+                // Effacer la liste actuelle
+                savesList.innerHTML = '';
+                
+                // Ajouter chaque sauvegarde
+                savesToDisplay.forEach(save => {
+                    const saveItem = createSaveItemElement(save);
+                    savesList.appendChild(saveItem);
+                });
+                
+                // Mettre à jour la pagination
+                updatePagination(totalPages);
+                
+                // Afficher la pagination si nécessaire
+                pagination.style.display = totalPages > 1 ? 'flex' : 'none';
+            }
+            
+            function createSaveItemElement(save) {
+                const saveItem = document.createElement('div');
+                saveItem.className = 'save-item';
+                saveItem.setAttribute('data-id', save.id);
+                
+                // Déterminer la couleur de la bordure en fonction du statut
+                let borderColor = 'var(--success-color)';
+                switch (save.status) {
+                    case 'brouillon': borderColor = 'var(--warning-color)'; break;
+                    case 'traité': borderColor = 'var(--info-color)'; break;
+                    case 'annulé': borderColor = 'var(--danger-color)'; break;
+                }
+                
+                saveItem.style.borderLeftColor = borderColor;
+                
+                // Créer le badge de statut
+                const statusLabels = {
+                    'envoyé': { label: 'Envoyé', color: 'var(--success-color)', bg: '#d4edda' },
+                    'brouillon': { label: 'Brouillon', color: 'var(--warning-color)', bg: '#fff3cd' },
+                    'traité': { label: 'Traité', color: 'var(--info-color)', bg: '#d1ecf1' },
+                    'annulé': { label: 'Annulé', color: 'var(--danger-color)', bg: '#f8d7da' }
+                };
+                
+                const status = statusLabels[save.status] || statusLabels.envoyé;
+                
+                saveItem.innerHTML = `
+                    <div class="save-item-header">
+                        <div>
+                            <div class="save-code">${save.code}</div>
+                            <div class="save-date">
+                                <i class="far fa-calendar"></i>
+                                ${save.formattedDate} à ${save.formattedTime}
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="background-color: ${status.bg}; color: ${status.color}; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 600;">
+                                ${status.label}
+                            </div>
+                            <div class="save-actions">
+                                <button class="action-btn action-btn-view" data-action="view" data-id="${save.id}">
+                                    <i class="fas fa-eye"></i> Voir
+                                </button>
+                                <button class="action-btn action-btn-whatsapp" data-action="whatsapp" data-id="${save.id}">
+                                    <i class="fab fa-whatsapp"></i> Renvoyer
+                                </button>
+                                <button class="action-btn action-btn-delete" data-action="delete" data-id="${save.id}">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="save-details">
+                        <div class="save-detail-item">
+                            <div class="detail-label">Acheteur</div>
+                            <div class="detail-value">${save.acheteur.nom}</div>
+                        </div>
+                        
+                        <div class="save-detail-item">
+                            <div class="detail-label">Commerçant</div>
+                            <div class="detail-value">${save.commercant.nom}</div>
+                        </div>
+                        
+                        <div class="save-detail-item">
+                            <div class="detail-label">Articles</div>
+                            <div class="detail-value">${save.articles.length} article(s)</div>
+                        </div>
+                        
+                        <div class="save-detail-item">
+                            <div class="detail-label">Total</div>
+                            <div class="detail-value">${save.details.total.toLocaleString('fr-FR')} FCFA</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Ajouter les événements aux boutons d'action
+                saveItem.querySelector('[data-action="view"]').addEventListener('click', function() {
+                    viewSaveDetails(save.id);
+                });
+                
+                saveItem.querySelector('[data-action="whatsapp"]').addEventListener('click', function() {
+                    resendWhatsApp(save.id);
+                });
+                
+                saveItem.querySelector('[data-action="delete"]').addEventListener('click', function() {
+                    deleteSave(save.id);
+                });
+                
+                return saveItem;
+            }
+            
+            function updatePagination(totalPages) {
+                const pageNumbersContainer = document.getElementById('page-numbers');
+                pageNumbersContainer.innerHTML = '';
+                
+                // Bouton précédent
+                prevPageBtn.disabled = AppState.currentPage === 1;
+                
+                // Numéros de page
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.className = 'page-btn';
+                    pageBtn.textContent = i;
+                    pageBtn.disabled = i === AppState.currentPage;
+                    
+                    if (i === AppState.currentPage) {
+                        pageBtn.classList.add('active');
+                    }
+                    
+                    pageBtn.addEventListener('click', function() {
+                        AppState.currentPage = i;
+                        renderSavesList();
+                    });
+                    
+                    pageNumbersContainer.appendChild(pageBtn);
+                }
+                
+                // Bouton suivant
+                nextPageBtn.disabled = AppState.currentPage === totalPages;
+            }
+            
+            function viewSaveDetails(saveId) {
+                const save = AppState.saves.find(s => s.id === saveId);
+                if (!save) return;
+                
+                // Créer une fenêtre modale pour afficher les détails
+                const modal = document.createElement('div');
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                modal.style.display = 'flex';
+                modal.style.justifyContent = 'center';
+                modal.style.alignItems = 'center';
+                modal.style.zIndex = '1000';
+                modal.style.padding = '20px';
+                
+                modal.innerHTML = `
+                    <div style="background: white; border-radius: var(--radius); padding: 30px; max-width: 800px; width: 100%; max-height: 80vh; overflow-y: auto;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: var(--primary-color);">Détails de la commande</h3>
+                            <button id="close-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: var(--primary-color); margin-bottom: 10px;">Informations de l'acheteur</h4>
+                            <p><strong>Nom:</strong> ${save.acheteur.nom}</p>
+                            <p><strong>Téléphone:</strong> ${save.acheteur.telephone}</p>
+                            <p><strong>Email:</strong> ${save.acheteur.email || 'Non précisé'}</p>
+                            <p><strong>Adresse:</strong> ${save.acheteur.adresse || 'Non précisée'}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: var(--primary-color); margin-bottom: 10px;">Informations du commerçant</h4>
+                            <p><strong>Nom:</strong> ${save.commercant.nom}</p>
+                            <p><strong>WhatsApp:</strong> ${save.commercant.whatsapp}</p>
+                            <p><strong>Adresse:</strong> ${save.commercant.adresse || 'Non précisée'}</p>
+                            <p><strong>Type:</strong> ${save.commercant.type || 'Non précisé'}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: var(--primary-color); margin-bottom: 10px;">Articles commandés</h4>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color);">Article</th>
+                                        <th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color);">Quantité</th>
+                                        <th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color);">Prix unitaire</th>
+                                        <th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color);">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${save.articles.map(item => `
+                                        <tr>
+                                            <td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.name}</td>
+                                            <td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.quantity}</td>
+                                            <td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.price.toLocaleString('fr-FR')} FCFA</td>
+                                            <td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${item.total.toLocaleString('fr-FR')} FCFA</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" style="padding: 10px; text-align: right; font-weight: bold;">Sous-total:</td>
+                                        <td style="padding: 10px; font-weight: bold;">${save.details.subtotal.toLocaleString('fr-FR')} FCFA</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="padding: 10px; text-align: right; font-weight: bold;">Frais de livraison:</td>
+                                        <td style="padding: 10px; font-weight: bold;">${save.details.livraison.toLocaleString('fr-FR')} FCFA</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="padding: 10px; text-align: right; font-weight: bold; color: var(--primary-color);">TOTAL:</td>
+                                        <td style="padding: 10px; font-weight: bold; color: var(--primary-color);">${save.details.total.toLocaleString('fr-FR')} FCFA</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                            <button id="print-details" class="btn btn-primary" style="padding: 10px 20px;">
+                                <i class="fas fa-print"></i> Imprimer
+                            </button>
+                            <button id="close-modal-btn" class="btn btn-secondary" style="padding: 10px 20px;">
+                                Fermer
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Événements pour la modal
+                modal.querySelector('#close-modal').addEventListener('click', function() {
+                    document.body.removeChild(modal);
+                });
+                
+                modal.querySelector('#close-modal-btn').addEventListener('click', function() {
+                    document.body.removeChild(modal);
+                });
+                
+                modal.querySelector('#print-details').addEventListener('click', function() {
+                    const printContent = modal.querySelector('div > div').innerHTML;
+                    const originalContent = document.body.innerHTML;
+                    
+                    document.body.innerHTML = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Détails de la commande ${save.code}</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; padding: 20px; }
+                                .receipt { max-width: 800px; margin: 0 auto; }
+                                .header { text-align: center; margin-bottom: 30px; }
+                                @media print {
+                                    .no-print { display: none; }
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="receipt">
+                                <div class="header">
+                                    <h1>Détails de la commande</h1>
+                                    <p>Code: ${save.code}</p>
+                                    <p>Date: ${save.formattedDate} à ${save.formattedTime}</p>
+                                </div>
+                                ${printContent}
+                            </div>
+                        </body>
+                        </html>
+                    `;
+                    
+                    window.print();
+                    document.body.innerHTML = originalContent;
+                    location.reload();
+                });
+                
+                // Fermer la modal en cliquant à l'extérieur
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+            }
+            
+            function resendWhatsApp(saveId) {
+                const save = AppState.saves.find(s => s.id === saveId);
+                if (!save) return;
+                
+                sendWhatsAppReceipt(
+                    save.acheteur,
+                    save.commercant,
+                    save.articles,
+                    save.code,
+                    save.details.total,
+                    save.details.paiement,
+                    save.details.livraison,
+                    save.details.instructions,
+                    save.details.livraison
+                );
+                
+                showNotification('Message WhatsApp renvoyé avec succès!', 'success');
+            }
+            
+            function deleteSave(saveId) {
+                if (confirm('Êtes-vous sûr de vouloir supprimer cette commande? Cette action est irréversible.')) {
+                    AppState.saves = AppState.saves.filter(s => s.id !== saveId);
+                    saveSavesToStorage();
+                    updateSaveCount();
+                    updateStats();
+                    renderSavesList();
+                    showNotification('Commande supprimée avec succès!', 'success');
+                }
+            }
+            
+            function exportSaves() {
+                try {
+                    const dataStr = JSON.stringify(AppState.saves, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                    
+                    const exportFileDefaultName = `commandes-mastercard-${new Date().toISOString().split('T')[0]}.json`;
+                    
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileDefaultName);
+                    linkElement.click();
+                    
+                    showNotification('Données exportées avec succès!', 'success');
+                } catch (error) {
+                    console.error('Erreur lors de l\'exportation:', error);
+                    showNotification('Erreur lors de l\'exportation des données', 'error');
+                }
+            }
+            
+            function resetForm() {
+                if (confirm('Voulez-vous vraiment réinitialiser le formulaire? Toutes les données non sauvegardées seront perdues.')) {
+                    form.reset();
+                    resetFormFields();
+                    itemsContainer.innerHTML = '';
+                    itemCount = 1;
+                    
+                    // Réinitialiser le premier article
+                    const firstItem = document.createElement('div');
+                    firstItem.className = 'item-row';
+                    firstItem.setAttribute('data-item', '1');
+                    firstItem.innerHTML = `
+                        <div class="item-name">
+                            <label>Article <span class="required">*</span></label>
+                            <input type="text" class="item-input" placeholder="Nom de l'article" data-field="name" required>
+                        </div>
+                        <div class="item-quantity">
+                            <label>Quantité <span class="required">*</span></label>
+                            <input type="number" class="item-input" placeholder="1" min="1" value="1" data-field="quantity" required>
+                        </div>
+                        <div class="item-price">
+                            <label>Prix unitaire (FCFA) <span class="required">*</span></label>
+                            <div class="currency-input">
+                                <span class="currency-symbol">FCFA</span>
+                                <input type="number" class="item-input" placeholder="0" min="0" data-field="price" required>
+                            </div>
+                        </div>
+                        <div class="item-total">
+                            <div>
+                                <label>Total</label>
+                                <div class="item-total-display">0 FCFA</div>
+                            </div>
+                            <button type="button" class="remove-item-btn" data-remove="1" style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    itemsContainer.appendChild(firstItem);
+                    updateItemTotal(1);
+                    updateSummary();
+                }
+            }
+            
+            function resetFormFields() {
+                // Réinitialiser les valeurs par défaut
+                document.getElementById('acheteur-nom').value = 'KOLA Maniwah';
+                document.getElementById('acheteur-telephone').value = '+228 93 38 75 95';
+                document.getElementById('acheteur-email').value = 'kola.maniwah@example.tg';
+                document.getElementById('acheteur-adresse').value = 'Lomé, Agoè, Togo';
+                document.getElementById('commercant-whatsapp').value = '+228 92 87 16 05';
+                document.getElementById('paiement-methode').value = 'mastercard';
+            }
+            
+            function switchTab(tabId) {
+                // Mettre à jour les onglets actifs
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+                
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}-tab`) {
+                        content.classList.add('active');
+                    }
+                });
+                
+                // Si on passe à l'onglet des sauvegardes, re-rendre la liste
+                if (tabId === 'saves') {
+                    renderSavesList();
+                }
+            }
+            
+            function showNotification(message, type) {
+                // Supprimer les notifications existantes
+                const existingNotifications = document.querySelectorAll('.notification');
+                existingNotifications.forEach(notification => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                });
+                
+                // Créer une nouvelle notification
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                        <div style="flex: 1;">${message}</div>
+                        <button style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;" onclick="this.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Supprimer automatiquement après 5 secondes
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 5000);
+            }
+            
+            // Initialiser le bouton de suppression du premier article
+            document.querySelector('.remove-item-btn').addEventListener('click', function() {
+                const itemId = this.getAttribute('data-remove');
+                removeItem(itemId);
+            });
+        });
+    </script>
+</body>
+</html>
